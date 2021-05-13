@@ -15,16 +15,15 @@ class SplashViewModel extends BaseViewModel {
 
   // check internet available
   void checkConnection(BuildContext context) {
-    /* Connectivity().checkConnectivity().then((result) {
+    Connectivity().checkConnectivity().then((result) {
       if (result != ConnectivityResult.none) {
-        getPhoneNumbers();
-        checkUserLogin(context);
+        navigateToBaseLayoutView(context);
       } else {
         print("no internet connection here");
         _isNoConnection = true;
         notifyListeners();
       }
-    }); */
+    });
   }
 
   /* // check user login or  not
@@ -52,10 +51,10 @@ class SplashViewModel extends BaseViewModel {
     });
   } */
 
-  /* // navigate to base layout view
+  // navigate to base layout view
   void navigateToBaseLayoutView(BuildContext context) {
     Future.delayed(Duration(milliseconds: 2000)).then((value) {
-      Navigator.popAndPushNamed(context, BaseLayoutView.routeName);
+      Navigator.popAndPushNamed(context, BookmarkView.routeName);
     });
-  } */
+  }
 }
