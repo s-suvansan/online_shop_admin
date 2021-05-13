@@ -29,6 +29,45 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
 
+  # state management
+  stacked: 1.7.6
+
+  # stack hook
+  stacked_hooks: ^0.1.3+2
+  flutter_hooks: ^0.15.0
+
+  # intl formatinig package (Eg:- time,currency)
+  intl: ^0.16.1
+  # svg rendering
+  flutter_svg: ^0.18.0
+  
+  # firebase related
+  firebase_core: ^0.4.0+9
+  firebase_analytics: ^5.0.2
+  firebase_auth: ^0.14.0+5
+  cloud_firestore: ^0.12.9+5
+
+  # url launcher
+  url_launcher: ^5.7.10
+
+  # provider
+  provider: ^4.3.2+3
+
+  # shared prefrence
+  shared_preferences: ^0.5.12+4
+
+  # get it - state management
+  get_it: ^5.0.3
+
+  # caches network images
+  cached_network_image: ^2.5.1
+
+  # connectivity check network
+  connectivity: ^2.0.2
+
+  # for enlarge image
+  photo_view: ^0.10.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
