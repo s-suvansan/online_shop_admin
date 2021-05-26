@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         BookmarkView.routeName: (context) => BookmarkView(),
+        AddProductView.routeName: (context) => AddProductView(),
       },
       home: SplashView(),
     );

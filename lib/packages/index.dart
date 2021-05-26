@@ -19,3 +19,4 @@ export 'dart:convert';
 export 'package:photo_view/photo_view.dart';
 export 'package:photo_view/photo_view_gallery.dart';
 export 'package:connectivity/connectivity.dart';
+export 'package:multi_image_picker/multi_image_picker.dart';

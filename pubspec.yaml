@@ -68,6 +68,10 @@ dependencies:
   # for enlarge image
   photo_view: ^0.10.3
 
+  #multiple image picker
+  multi_image_picker: ^4.7.14
+  file_picker: ^2.1.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

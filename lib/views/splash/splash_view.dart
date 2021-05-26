@@ -16,7 +16,7 @@ class _Body extends ViewModelWidget<SplashViewModel> {
   @override
   Widget build(BuildContext context, SplashViewModel model) {
     return Container(
-      color: !model.isNoInternet ? BrandColors.dark : BrandColors.light,
+      color: BrandColors.light,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

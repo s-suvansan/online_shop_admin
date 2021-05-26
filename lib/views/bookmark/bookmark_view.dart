@@ -11,11 +11,12 @@ class BookmarkView extends StatelessWidget {
           appBar: _AppBar(),
           body: _FavouriteList(),
           floatingActionButton: FloatingActionButton.extended(
-            onPressed: () {},
+            backgroundColor: BrandColors.brandColorDark,
+            onPressed: () => model.openAddProduct(context),
             label: Row(
               children: [
-                Icon(Icons.add),
-                BrandTexts.titleBold(text: "ADD"),
+                Icon(Icons.add, color: BrandColors.light),
+                BrandTexts.titleBold(text: "ADD", color: BrandColors.light),
               ],
             ),
           ),
@@ -42,7 +43,7 @@ class _AppBar extends ViewModelWidget<BookmarkViewModel> implements PreferredSiz
           fontSize: 20.0,
           fontWeight: BrandTexts.black,
           fontFamily: BrandTexts.logoFont,
-          color: getIt<ThemeChange>().isDark ? BrandColors.light : BrandColors.dark),
+          color: BrandColors.light),
     );
   }
 

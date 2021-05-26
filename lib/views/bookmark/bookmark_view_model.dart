@@ -31,4 +31,8 @@ class BookmarkViewModel extends BaseViewModel {
       }
     });
   }
+
+  openAddProduct(BuildContext context) {
+    Navigator.pushNamed(context, AddProductView.routeName);
+  }
 }

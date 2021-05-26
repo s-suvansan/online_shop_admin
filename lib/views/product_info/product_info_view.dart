@@ -21,7 +21,6 @@ class ProductInfoView extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: _BottomCallButton(),
       ),
       onModelReady: (model) => model.onInit(productModel),
       viewModelBuilder: () => ProductInfoViewModel(),
@@ -287,61 +286,5 @@ class _DescView extends ViewModelWidget<ProductInfoViewModel> {
         ],
       );
     });
-  }
-}
-
-class _BottomCallButton extends ViewModelWidget<ProductInfoViewModel> {
-  const _BottomCallButton({Key key}) : super(key: key, reactive: false);
-
-  @override
-  Widget build(BuildContext context, ProductInfoViewModel model) {
-    return Row(
-      children: [
-        Expanded(
-          child: InkWell(
-            onTap: () => model.showPhoneNumbers(context, phoneNumber: Global.phoneNumberModel.normal),
-            child: Container(
-              height: 50.0,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(color: BrandColors.callColor, borderRadius: BorderRadius.circular(5.0)),
-              margin: EdgeInsets.only(left: 16.0, right: 8.0, top: 8.0, bottom: 4.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  App.svgImage(svg: CALL, height: 18.0, color: BrandColors.light),
-                  SizedBox(width: 8.0),
-                  BrandTexts.titleBold(
-                      text: "${getIt<LanguageChange>().lang.call}",
-                      color: BrandColors.light,
-                      fontSize: getIt<LanguageChange>().languageCode == Lang.English.code ? 18.0 : 16.0),
-                ],
-              ),
-            ),
-          ),
-        ),
-        Expanded(
-          child: InkWell(
-            onTap: () => model.showPhoneNumbers(context, phoneNumber: Global.phoneNumberModel.whatsApp, isCall: false),
-            child: Container(
-              height: 50.0,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(color: BrandColors.whatsappColor, borderRadius: BorderRadius.circular(5.0)),
-              margin: EdgeInsets.only(left: 8.0, right: 16.0, top: 8.0, bottom: 4.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  App.svgImage(svg: WHATSAPP, height: 22.0, color: BrandColors.light),
-                  SizedBox(width: 8.0),
-                  BrandTexts.titleBold(
-                      text: "${getIt<LanguageChange>().lang.whatsapp}",
-                      color: BrandColors.light,
-                      fontSize: getIt<LanguageChange>().languageCode == Lang.English.code ? 18.0 : 16.0),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
   }
 }
