@@ -43,11 +43,11 @@ class ProductModel {
         "title": title,
         "desc": desc,
         "price": price,
-        "imageUrl": List<String>.from(imageUrl.map((x) => x)),
+        "imageUrl": imageUrl != null ? List<String>.from(imageUrl.map((x) => x)) : [],
         "postAt": FieldValue.serverTimestamp(),
         "postBy": postBy,
         "postFrom": postFrom,
-        "keywords": List<String>.from(keywords.map((x) => x)),
+        "keywords": keywords != null ? List<String>.from(keywords.map((x) => x)) : [],
         "isNegotiable": isNegotiable,
       };
 }

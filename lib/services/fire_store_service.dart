@@ -24,6 +24,17 @@ class FireStoreService {
     return null;
   }
 
+  //add product
+  static Future<bool> addProduct(ProductModel data) async {
+    // Call the user's CollectionReference to add a new user
+    try {
+      await Firestore.instance.collection(Global.PRODUCTS).document(data.id).setData(data.toJson());
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   //save data
   static void addLangData() async {
     try {

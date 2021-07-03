@@ -340,6 +340,17 @@ class App {
     return _value;
   }
 
+  // show bottom sheet
+  static Future<bool> showCommonPopup(BuildContext context, Widget widget) async {
+    bool _value = false;
+    _value = await showDialog(
+        context: context,
+        builder: (BuildContext bc) {
+          return widget;
+        });
+    return (_value != null) ? _value : false;
+  }
+
   // launch call and sms
   static void callAndSmsLauncher(BuildContext context, {@required String phoneNumber, bool isCall = true}) {
     String _url = "";

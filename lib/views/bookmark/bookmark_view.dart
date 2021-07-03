@@ -1,3 +1,5 @@
+import 'package:flutter_slidable/flutter_slidable.dart';
+
 import '../../main_index.dart';
 
 class BookmarkView extends StatelessWidget {
@@ -111,85 +113,103 @@ class _FavouriteListTile extends ViewModelWidget<BookmarkViewModel> {
   _FavouriteListTile({Key key, @required this.index}) : super(key: key, reactive: true);
   @override
   Widget build(BuildContext context, BookmarkViewModel model) {
-    return Container(
-      decoration: BoxDecoration(
-          color: getIt<ThemeChange>().isDark ? BrandColors.dark3 : BrandColors.light,
-          borderRadius: BorderRadius.all(
-            Radius.circular(8.0),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: BrandColors.shadow.withOpacity(0.1),
-              spreadRadius: 0.5,
-              offset: Offset.zero,
-              blurRadius: 2.0,
+    return Slidable(
+      actionPane: SlidableDrawerActionPane(),
+      actionExtentRatio: 0.25,
+      secondaryActions: <Widget>[
+        IconSlideAction(
+          caption: 'Edit',
+          color: Colors.blue,
+          icon: Icons.edit,
+          onTap: () => model.openAddProduct(context, isEdit: true, productModel: model.product[index]),
+        ),
+        IconSlideAction(
+          caption: 'Delete',
+          color: Colors.red,
+          icon: Icons.delete,
+          onTap: () => model.deleteProduct(context, index: index),
+        ),
+      ],
+      child: Container(
+        decoration: BoxDecoration(
+            color: getIt<ThemeChange>().isDark ? BrandColors.dark3 : BrandColors.light,
+            borderRadius: BorderRadius.all(
+              Radius.circular(8.0),
             ),
-          ]),
-      width: App.getDeviceWidth(context),
-      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-      height: 110.0,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: BrandTexts.commonText(
-                        text: "${model.product[index].title}",
-                        color: getIt<ThemeChange>().isDark ? BrandColors.light : BrandColors.dark,
-                        maxLines: 1,
-                        fontSize: 16.0,
-                        fontWeight: BrandTexts.bold,
+            boxShadow: [
+              BoxShadow(
+                color: BrandColors.shadow.withOpacity(0.1),
+                spreadRadius: 0.5,
+                offset: Offset.zero,
+                blurRadius: 2.0,
+              ),
+            ]),
+        width: App.getDeviceWidth(context),
+        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+        height: 110.0,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: BrandTexts.commonText(
+                          text: "${model.product[index].title}",
+                          color: getIt<ThemeChange>().isDark ? BrandColors.light : BrandColors.dark,
+                          maxLines: 1,
+                          fontSize: 16.0,
+                          fontWeight: BrandTexts.bold,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8.0),
-                BrandTexts.caption(
-                  text: "${model.product[index].desc}",
-                  color: getIt<ThemeChange>().isDark ? BrandColors.light : BrandColors.dark,
-                  maxLines: 2,
-                ),
-                SizedBox(height: 8.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    BrandTexts.subTitleBold(
-                      text: "${App.getPrice(model.product[index].price)}",
-                      color: getIt<ThemeChange>().isDark ? BrandColors.light : BrandColors.dark,
-                    ),
-                    BrandTexts.caption(
-                      text: "${App.getTime(model.product[index].postAt)}",
-                      color: getIt<ThemeChange>().isDark ? BrandColors.light : BrandColors.dark,
-                      fontSize: getIt<LanguageChange>().languageCode == Lang.English.code ? 12.0 : 10.0,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: 8.0),
-          ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            child: Container(
-              width: 90.0,
-              height: 90.0,
-              child: App.cacheImage(
-                (model.product[index].imageUrl != null && model.product[index].imageUrl.isNotEmpty)
-                    ? model.product[index].imageUrl[0]
-                    : "",
+                    ],
+                  ),
+                  SizedBox(height: 8.0),
+                  BrandTexts.caption(
+                    text: "${model.product[index].desc}",
+                    color: getIt<ThemeChange>().isDark ? BrandColors.light : BrandColors.dark,
+                    maxLines: 2,
+                  ),
+                  SizedBox(height: 8.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      BrandTexts.subTitleBold(
+                        text: "${App.getPrice(model.product[index].price)}",
+                        color: getIt<ThemeChange>().isDark ? BrandColors.light : BrandColors.dark,
+                      ),
+                      BrandTexts.caption(
+                        text: "${App.getTime(model.product[index].postAt)}",
+                        color: getIt<ThemeChange>().isDark ? BrandColors.light : BrandColors.dark,
+                        fontSize: getIt<LanguageChange>().languageCode == Lang.English.code ? 12.0 : 10.0,
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+            SizedBox(width: 8.0),
+            ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(8.0)),
+              child: Container(
+                width: 90.0,
+                height: 90.0,
+                child: App.cacheImage(
+                  (model.product[index].imageUrl != null && model.product[index].imageUrl.isNotEmpty)
+                      ? model.product[index].imageUrl[0]
+                      : NO_IMAGE,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

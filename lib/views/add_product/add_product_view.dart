@@ -15,6 +15,7 @@ class AddProductView extends StatelessWidget {
             bottomNavigationBar: _CommonButton(),
           ));
         },
+        onModelReady: (model) => model.onInit(context),
         viewModelBuilder: () => AddProductViewModel());
   }
 }
@@ -46,7 +47,7 @@ class _AppBar extends ViewModelWidget<AddProductViewModel> implements PreferredS
 
 class _BodyPart extends ViewModelWidget<AddProductViewModel> {
   @override
-  Widget build(BuildContext context, AddProductViewModel viewModel) {
+  Widget build(BuildContext context, AddProductViewModel model) {
     return Container(
       child: Form(
         child: ListView(
@@ -55,23 +56,31 @@ class _BodyPart extends ViewModelWidget<AddProductViewModel> {
             _CommonTextBox(
               hint: "Title",
               helperText: "Type product title here.",
+              productInfo: ProductInfo.Title,
+              initValue: model.productModel.title,
             ),
             SizedBox(height: 16.0),
             _CommonTextBox(
               hint: "Price",
               inputType: TextFeildInputType.Number,
               helperText: "Type product price here.",
+              productInfo: ProductInfo.Price,
+              initValue: model.productModel.price,
             ),
             SizedBox(height: 16.0),
             _CommonTextBox(
               hint: "Description",
               inputType: TextFeildInputType.MultiLine,
               helperText: "Type product description here.",
+              productInfo: ProductInfo.Desc,
+              initValue: model.productModel.desc,
             ),
             SizedBox(height: 16.0),
             _CommonTextBox(
               hint: "Post By (optional)",
               helperText: "Type name who post the product.",
+              productInfo: ProductInfo.PostBy,
+              initValue: model.productModel.postBy,
             ),
             SizedBox(height: 16.0),
             _NegotibelCheckBox(),
@@ -118,7 +127,7 @@ class _ImageBar extends ViewModelWidget<AddProductViewModel> {
             children: [
               BrandTexts.title(text: "Add Images to Products"),
               InkWell(
-                onTap: () {},
+                onTap: () => model.navigateToImageUploadView(context),
                 child: Container(
                   padding: EdgeInsets.all(4.0),
                   decoration: BoxDecoration(
@@ -135,14 +144,13 @@ class _ImageBar extends ViewModelWidget<AddProductViewModel> {
             ],
           ),
           SizedBox(height: 16.0),
-          if (model.images.length > 0)
-            Container(
-              height: 120.0,
-              child: ListView.separated(
-                shrinkWrap: true,
-                physics: BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) => Container(
+          Container(
+            height: 120.0,
+            child: ListView.separated(
+              shrinkWrap: true,
+              physics: BouncingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) => Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
                     color: BrandColors.dark.withOpacity(0.1),
@@ -152,20 +160,21 @@ class _ImageBar extends ViewModelWidget<AddProductViewModel> {
                     // fit: StackFit.expand,
                     children: [
                       /* AssetThumb(
-                        asset: model.images[index],
-                        width: 300,
-                        height: 300,
-                      ), */
-                      // Image.file(
-                      //   model.imageFiles[index],
-                      //   width: 120,
-                      //   height: 120,
-                      // ),
+                            asset: model.images[index],
+                            width: 300,
+                            height: 300,
+                          ), */
+                      Image.network(
+                        model.images[index],
+                        width: 120,
+                        height: 120,
+                        fit: BoxFit.cover,
+                      ),
                       Positioned(
                           right: 4.0,
                           top: 4.0,
                           child: InkWell(
-                            onTap: () => model.removeImage(index: index),
+                            onTap: () => model.removeAlreadyAddedImageImage(context, index: index),
                             child: Container(
                               decoration: BoxDecoration(
                                 color: BrandColors.brandColorDark,
@@ -179,14 +188,13 @@ class _ImageBar extends ViewModelWidget<AddProductViewModel> {
                             ),
                           )),
                     ],
-                  ),
-                ),
-                separatorBuilder: (_, __) => SizedBox(
-                  width: 8.0,
-                ),
-                itemCount: model.imageCount,
+                  )),
+              separatorBuilder: (_, __) => SizedBox(
+                width: 8.0,
               ),
+              itemCount: (model.images?.length ?? 0),
             ),
+          )
         ],
       ),
     );
@@ -199,17 +207,19 @@ class _CommonTextBox extends HookViewModelWidget<AddProductViewModel> {
   final String initValue;
   final String helperText;
   final TextFeildInputType inputType;
+  final ProductInfo productInfo;
 
   _CommonTextBox({
     this.hint = "Title",
     this.initValue = "",
     this.helperText = "",
     this.inputType = TextFeildInputType.Text,
+    @required this.productInfo,
   });
 
   @override
   Widget buildViewModelWidget(BuildContext context, AddProductViewModel model) {
-    var textEditingController = useTextEditingController(text: initValue);
+    var textEditingController = useTextEditingController(text: initValue ?? "");
     return TextFormField(
       controller: textEditingController,
       maxLines: (inputType == TextFeildInputType.MultiLine) ? 5 : 1,
@@ -220,6 +230,7 @@ class _CommonTextBox extends HookViewModelWidget<AddProductViewModel> {
               ? TextInputType.multiline
               : TextInputType.text,
       style: BrandTexts.textStyle(fontWeight: BrandTexts.bold),
+      onChanged: (val) => model.onTextChange(val, productInfo),
       decoration: InputDecoration(
         labelText: hint,
         labelStyle: BrandTexts.textStyle(),
@@ -246,13 +257,24 @@ class _CommonTextBox extends HookViewModelWidget<AddProductViewModel> {
 
 class _CommonButton extends ViewModelWidget<AddProductViewModel> {
   @override
-  Widget build(BuildContext context, AddProductViewModel viewModel) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-      height: 50.0,
-      decoration: BoxDecoration(color: BrandColors.brandColor, borderRadius: BorderRadius.circular(5.0)),
-      alignment: Alignment.center,
-      child: BrandTexts.titleBold(text: "Add Product", color: BrandColors.light),
+  Widget build(BuildContext context, AddProductViewModel model) {
+    return GestureDetector(
+      onTap: () => model.addProduct(context),
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+        height: 50.0,
+        decoration: BoxDecoration(color: BrandColors.brandColor, borderRadius: BorderRadius.circular(5.0)),
+        alignment: Alignment.center,
+        child: !model.isLoading
+            ? BrandTexts.titleBold(text: "Add Product", color: BrandColors.light)
+            : SizedBox(
+                height: 20.0,
+                width: 20.0,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(BrandColors.light),
+                ),
+              ),
+      ),
     );
   }
 }
@@ -261,4 +283,11 @@ enum TextFeildInputType {
   Text,
   Number,
   MultiLine,
+}
+
+enum ProductInfo {
+  Title,
+  Price,
+  Desc,
+  PostBy,
 }

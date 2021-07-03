@@ -1,21 +1,29 @@
-import 'dart:io';
+import 'package:online_shop_admin/views/add_product/add_product_arg.dart';
 
 import '../../main_index.dart';
 
 class AddProductViewModel extends BaseViewModel {
   // variables
   bool _isNegotible = false;
-  int _imageCount = 2;
-  List<File> _images = <File>[];
-  // List<File> _imageFiles = new List<File>();
-
-  // String _error = 'No Error Dectected';
-
+  List<String> _images = <String>[];
+  ProductModel _productModel = ProductModel();
+  bool _isLoading = false;
+  AddProductArg _arg;
   //getter
   bool get isNegitible => _isNegotible;
-  int get imageCount => _imageCount;
-  List<File> get images => _images;
-  // List<File> get imageFiles => imageFiles;
+  List<String> get images => _images;
+  ProductModel get productModel => _productModel;
+  bool get isLoading => _isLoading;
+
+  //on init
+  void onInit(BuildContext context) {
+    _arg = ModalRoute.of(context).settings.arguments;
+    if (_arg.isEdit) {
+      _productModel = _arg.productModel;
+      _images = _arg?.productModel?.imageUrl ?? [];
+      _isNegotible = _arg?.productModel?.isNegotiable ?? false;
+    }
+  }
 
   // change is negotible
   void changeIsNegotible() {
@@ -23,6 +31,83 @@ class AddProductViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  //navigate to image upload view
+  void navigateToImageUploadView(context) {
+    Navigator.of(context)
+        .pushNamed(ImageUploadView.routeName, arguments: ImageUploadArg(alreadyUploadedImage: _images))
+        .then((value) {
+      if (value != null) {
+        _images = value;
+        notifyListeners();
+      }
+    });
+  }
+
   //remove image
-  void removeImage({@required int index}) {}
+  removeAlreadyAddedImageImage(BuildContext context, {int index}) async {
+    App.showCommonPopup(
+        context,
+        CommonPopup(
+          desc: "Do you want to delete this image?",
+        )).then((value) {
+      if (value) {
+        FirebaseStorage.instance.getReferenceFromUrl(_images[index]).then((ref) {
+          if (ref != null) {
+            FirebaseStorage.instance.ref().child(ref.path).delete().then((_) {
+              _images.removeAt(index);
+              notifyListeners();
+            });
+          }
+        });
+      }
+    });
+  }
+
+  void addProduct(BuildContext context) {
+    _productModel.id = _arg.isEdit ? _arg.productModel.id : App.getRandomString(20);
+    _productModel.imageUrl = _images;
+    _productModel.isNegotiable = isNegitible;
+    if (_productModel?.title != null &&
+        _productModel.title != "" &&
+        _productModel?.desc != null &&
+        _productModel.desc != "" &&
+        _productModel?.price != null &&
+        _productModel.price != "" &&
+        _productModel?.postBy != null &&
+        _productModel.postBy != "" &&
+        _images != null &&
+        _images.isNotEmpty) {
+      _isLoading = true;
+      notifyListeners();
+      FireStoreService.addProduct(_productModel).then((value) {
+        if (value) {
+          _isLoading = false;
+          notifyListeners();
+          Navigator.pop(context);
+        }
+      });
+    } else {
+      _isLoading = false;
+      notifyListeners();
+      App.showInfoBar(context, msg: "வடிவா check பண்ணுடா புண்ட, ஒரு image ஆவது கட்டயம் குடு.", bgColor: BrandColors.dangers);
+    }
+  }
+
+  onTextChange(String val, ProductInfo productInfo) {
+    switch (productInfo) {
+      case ProductInfo.Title:
+        _productModel.title = val;
+        break;
+      case ProductInfo.Price:
+        _productModel.price = val;
+        break;
+      case ProductInfo.Desc:
+        _productModel.desc = val;
+        break;
+      case ProductInfo.PostBy:
+        _productModel.postBy = val;
+        break;
+      default:
+    }
+  }
 }
