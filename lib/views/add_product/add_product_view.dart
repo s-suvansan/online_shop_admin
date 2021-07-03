@@ -12,6 +12,7 @@ class AddProductView extends StatelessWidget {
               child: Scaffold(
             appBar: _AppBar(),
             body: _BodyPart(),
+            bottomNavigationBar: _CommonButton(),
           ));
         },
         viewModelBuilder: () => AddProductViewModel());
@@ -115,16 +116,17 @@ class _ImageBar extends ViewModelWidget<AddProductViewModel> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              BrandTexts.title(text: "Select Images"),
+              BrandTexts.title(text: "Add Images to Products"),
               InkWell(
-                onTap: () => model.loadAssets(),
+                onTap: () {},
                 child: Container(
+                  padding: EdgeInsets.all(4.0),
                   decoration: BoxDecoration(
                     color: BrandColors.brandColorDark,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.add,
+                    Icons.arrow_forward_ios,
                     size: 30.0,
                     color: BrandColors.light,
                   ),
@@ -154,11 +156,11 @@ class _ImageBar extends ViewModelWidget<AddProductViewModel> {
                         width: 300,
                         height: 300,
                       ), */
-                      Image.file(
-                        model.imageFiles[index],
-                        width: 120,
-                        height: 120,
-                      ),
+                      // Image.file(
+                      //   model.imageFiles[index],
+                      //   width: 120,
+                      //   height: 120,
+                      // ),
                       Positioned(
                           right: 4.0,
                           top: 4.0,
@@ -240,6 +242,19 @@ class _CommonTextBox extends HookViewModelWidget<AddProductViewModel> {
         color: BrandColors.shadow,
         width: 2.0,
       ));
+}
+
+class _CommonButton extends ViewModelWidget<AddProductViewModel> {
+  @override
+  Widget build(BuildContext context, AddProductViewModel viewModel) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+      height: 50.0,
+      decoration: BoxDecoration(color: BrandColors.brandColor, borderRadius: BorderRadius.circular(5.0)),
+      alignment: Alignment.center,
+      child: BrandTexts.titleBold(text: "Add Product", color: BrandColors.light),
+    );
+  }
 }
 
 enum TextFeildInputType {
