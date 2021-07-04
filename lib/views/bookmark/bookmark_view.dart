@@ -92,7 +92,7 @@ class _FavouriteList extends ViewModelWidget<BookmarkViewModel> {
                     : Empty(
                         image: EMPTY_MAN,
                         size: 150.0,
-                        moveFromTopBy: 180.0,
+                        moveFromTopBy: 0.0,
                       )
                 : Center(
                     child: Loading(

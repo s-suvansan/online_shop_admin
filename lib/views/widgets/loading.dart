@@ -42,3 +42,33 @@ class Loading extends StatelessWidget {
     });
   }
 }
+
+showLoadingDialog(BuildContext context) {
+  WillPopScope alert = WillPopScope(
+      onWillPop: () async => false,
+      child: SimpleDialog(
+          // key: key,
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          contentPadding: EdgeInsets.all(24.0),
+          children: <Widget>[
+            Center(
+              child: SizedBox(
+                height: 40.0,
+                width: 40.0,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(BrandColors.brandColorDark),
+                ),
+              ),
+            )
+          ]));
+  showDialog(
+    barrierColor: Colors.white.withOpacity(0.8),
+    barrierDismissible: false,
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}

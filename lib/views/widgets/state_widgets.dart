@@ -10,13 +10,13 @@ class Empty extends StatelessWidget {
     Key key,
     this.image,
     this.size = 200.0,
-    this.moveFromTopBy = 150.0,
+    this.moveFromTopBy = 0.0,
     this.isFav = false,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
-      // alignment: Alignment.center,
+      alignment: Alignment.center,
       margin: EdgeInsets.only(top: moveFromTopBy),
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.center,

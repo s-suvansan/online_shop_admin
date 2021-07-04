@@ -38,13 +38,13 @@ class ProductModel {
         isNegotiable: json["isNegotiable"] ?? false,
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson({bool isEdit = false}) => {
         "id": id,
         "title": title,
         "desc": desc,
         "price": price,
         "imageUrl": imageUrl != null ? List<String>.from(imageUrl.map((x) => x)) : [],
-        "postAt": FieldValue.serverTimestamp(),
+        "postAt": isEdit ? postAt : FieldValue.serverTimestamp(),
         "postBy": postBy,
         "postFrom": postFrom,
         "keywords": keywords != null ? List<String>.from(keywords.map((x) => x)) : [],

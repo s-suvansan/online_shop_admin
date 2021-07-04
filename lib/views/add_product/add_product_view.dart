@@ -30,7 +30,11 @@ class _AppBar extends ViewModelWidget<AddProductViewModel> implements PreferredS
       centerTitle: true,
       backgroundColor: BrandColors.brandColor,
       elevation: 0.0,
-      title: BrandTexts.commonText(text: "Add Product", fontSize: 20.0, fontWeight: BrandTexts.black, color: BrandColors.light),
+      title: BrandTexts.commonText(
+          text: model.arg.isEdit ? "Edit Product" : "Add Product",
+          fontSize: 20.0,
+          fontWeight: BrandTexts.black,
+          color: BrandColors.light),
       leading: InkWell(
         onTap: () => App.popOnce(context),
         child: Icon(
@@ -145,11 +149,14 @@ class _ImageBar extends ViewModelWidget<AddProductViewModel> {
           ),
           SizedBox(height: 16.0),
           Container(
-            height: 120.0,
-            child: ListView.separated(
+            child: GridView.builder(
               shrinkWrap: true,
               physics: BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisSpacing: 5.0,
+                crossAxisSpacing: 5.0,
+              ),
               itemBuilder: (context, index) => Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
@@ -159,11 +166,6 @@ class _ImageBar extends ViewModelWidget<AddProductViewModel> {
                   child: Stack(
                     // fit: StackFit.expand,
                     children: [
-                      /* AssetThumb(
-                            asset: model.images[index],
-                            width: 300,
-                            height: 300,
-                          ), */
                       Image.network(
                         model.images[index],
                         width: 120,
@@ -189,9 +191,6 @@ class _ImageBar extends ViewModelWidget<AddProductViewModel> {
                           )),
                     ],
                   )),
-              separatorBuilder: (_, __) => SizedBox(
-                width: 8.0,
-              ),
               itemCount: (model.images?.length ?? 0),
             ),
           )
@@ -266,7 +265,7 @@ class _CommonButton extends ViewModelWidget<AddProductViewModel> {
         decoration: BoxDecoration(color: BrandColors.brandColor, borderRadius: BorderRadius.circular(5.0)),
         alignment: Alignment.center,
         child: !model.isLoading
-            ? BrandTexts.titleBold(text: "Add Product", color: BrandColors.light)
+            ? BrandTexts.titleBold(text: model.arg.isEdit ? "Edit Product" : "Add Product", color: BrandColors.light)
             : SizedBox(
                 height: 20.0,
                 width: 20.0,

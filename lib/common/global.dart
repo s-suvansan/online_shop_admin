@@ -7,6 +7,7 @@ class Global {
   static const String PRODUCTS = "products";
   static const String POST_AT = "postAt";
   static const String FAVOURITE_USER_IDS = "favouriteUserIds";
+  static const String IMAGE_URLS = "imageUrl";
 
   //user details
   // static FirebaseUser userInfo;

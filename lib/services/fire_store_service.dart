@@ -25,14 +25,30 @@ class FireStoreService {
   }
 
   //add product
-  static Future<bool> addProduct(ProductModel data) async {
+  static Future<bool> addProduct(ProductModel data, {bool isEdit = false}) async {
     // Call the user's CollectionReference to add a new user
     try {
-      await Firestore.instance.collection(Global.PRODUCTS).document(data.id).setData(data.toJson());
+      await Firestore.instance.collection(Global.PRODUCTS).document(data.id).setData(data.toJson(isEdit: isEdit));
       return true;
     } catch (e) {
       return false;
     }
+  }
+
+  // un favourite product function
+  static Future<bool> removeImageUrl({@required String docId, @required String imageUrl}) async {
+    bool _value = true;
+    try {
+      await Firestore.instance.collection(Global.PRODUCTS).document(docId).updateData(
+        {
+          "${Global.IMAGE_URLS}": FieldValue.arrayRemove([imageUrl]),
+        },
+      ).catchError((e) => _value = false);
+    } catch (e) {
+      print(e.toString());
+      _value = false;
+    }
+    return _value;
   }
 
   //save data

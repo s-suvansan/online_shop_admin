@@ -32,6 +32,7 @@ class ImageUploadViewModel extends BaseViewModel {
   Future<void> uploadFiles(List<File> _images, BuildContext context) async {
     _isLoading = true;
     notifyListeners();
+    showLoadingDialog(context);
     try {
       var imageUrls = await Future.wait(_images.map((_image) => uploadFile(_image)));
       print(imageUrls);
@@ -43,11 +44,15 @@ class ImageUploadViewModel extends BaseViewModel {
         }
         _isLoading = false;
         notifyListeners();
+        App.popOnce(context);
         Navigator.pop(context, _uploadedImages);
+      } else {
+        App.popOnce(context);
       }
     } catch (e) {
       _isLoading = false;
       notifyListeners();
+      App.popOnce(context);
     }
   }
 

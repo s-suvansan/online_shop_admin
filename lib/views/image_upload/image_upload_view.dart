@@ -48,72 +48,82 @@ class _AppBar extends ViewModelWidget<ImageUploadViewModel> implements Preferred
 class _Body extends ViewModelWidget<ImageUploadViewModel> {
   @override
   Widget build(BuildContext context, ImageUploadViewModel model) {
-    return Column(
+    return ListView(
+      padding: EdgeInsets.all(8.0),
       children: [
         if (model.alreadyUploaedImages != null && model.alreadyUploaedImages.isNotEmpty) _ImageBar(),
         if (model.alreadyUploaedImages != null && model.alreadyUploaedImages.isNotEmpty) SizedBox(height: 16.0),
         Container(
           // height: 120.0,
-          child: ListView.separated(
-            shrinkWrap: true,
-            physics: BouncingScrollPhysics(),
-            // scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) => Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-                color: BrandColors.dark.withOpacity(0.1),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  BrandTexts.titleBold(text: "Selected Images"),
+                ],
               ),
-              padding: EdgeInsets.all(4.0),
-              child: (index != model.imageFiles.length)
-                  ? Stack(
-                      // fit: StackFit.expand,
-                      children: [
-                        /* AssetThumb(
-                            asset: model.images[index],
-                            width: 300,
-                            height: 300,
-                          ), */
-                        Image.file(
-                          model.imageFiles[index],
-                          width: 120,
-                          height: 120,
-                          fit: BoxFit.cover,
+              SizedBox(height: 8.0),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: BouncingScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 5.0,
+                  crossAxisSpacing: 5.0,
+                ),
+                // scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) => Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                    color: BrandColors.dark.withOpacity(0.1),
+                  ),
+                  padding: EdgeInsets.all(4.0),
+                  child: (index != model.imageFiles.length)
+                      ? Stack(
+                          // fit: StackFit.expand,
+                          children: [
+                            Image.file(
+                              model.imageFiles[index],
+                              width: 120,
+                              height: 120,
+                              fit: BoxFit.cover,
+                            ),
+                            Positioned(
+                                right: 4.0,
+                                top: 4.0,
+                                child: InkWell(
+                                  onTap: () => model.removeImage(index: index),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: BrandColors.brandColorDark,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Icons.close_rounded,
+                                      size: 20.0,
+                                      color: BrandColors.light,
+                                    ),
+                                  ),
+                                )),
+                          ],
+                        )
+                      : InkWell(
+                          onTap: () => model.pickImages(context),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 8.0),
+                            color: BrandColors.shadowLight,
+                            child: Icon(
+                              Icons.add_a_photo_outlined,
+                              size: 30.0,
+                            ),
+                          ),
                         ),
-                        Positioned(
-                            right: 4.0,
-                            top: 4.0,
-                            child: InkWell(
-                              onTap: () => model.removeImage(index: index),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: BrandColors.brandColorDark,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.close_rounded,
-                                  size: 20.0,
-                                  color: BrandColors.light,
-                                ),
-                              ),
-                            )),
-                      ],
-                    )
-                  : InkWell(
-                      onTap: () => model.pickImages(context),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 8.0),
-                        color: BrandColors.shadowLight,
-                        child: Icon(
-                          Icons.add_a_photo_outlined,
-                          size: 30.0,
-                        ),
-                      ),
-                    ),
-            ),
-            separatorBuilder: (_, __) => SizedBox(
-              height: 8.0,
-            ),
-            itemCount: (model.imageFiles?.length ?? 0) + 1,
+                ),
+
+                itemCount: (model.imageFiles?.length ?? 0) + 1,
+              ),
+            ],
           ),
         ),
       ],
@@ -132,16 +142,19 @@ class _ImageBar extends ViewModelWidget<ImageUploadViewModel> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              BrandTexts.title(text: "Already Uploaded Images"),
+              BrandTexts.titleBold(text: "Already Uploaded Images"),
             ],
           ),
           SizedBox(height: 8.0),
           Container(
-            height: 120.0,
-            child: ListView.separated(
+            child: GridView.builder(
               shrinkWrap: true,
               physics: BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisSpacing: 5.0,
+                crossAxisSpacing: 5.0,
+              ),
               itemBuilder: (context, index) => Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
@@ -154,9 +167,6 @@ class _ImageBar extends ViewModelWidget<ImageUploadViewModel> {
                     height: 120,
                     fit: BoxFit.cover,
                   )),
-              separatorBuilder: (_, __) => SizedBox(
-                width: 8.0,
-              ),
               itemCount: (model.alreadyUploaedImages?.length ?? 0),
             ),
           )

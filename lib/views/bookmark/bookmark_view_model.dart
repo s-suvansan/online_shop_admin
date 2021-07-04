@@ -49,13 +49,13 @@ class BookmarkViewModel extends BaseViewModel {
           desc: "Do you want to delete this product?",
         )).then((value) {
       if (value) {
-        _isLoading = true;
+        showLoadingDialog(context);
         deleteImages(index).then((value) {
           try {
             Firestore.instance.collection(Global.PRODUCTS).document("${_product[index].id}").delete();
-            _isLoading = false;
+            App.popOnce(context);
           } catch (e) {
-            _isLoading = false;
+            App.popOnce(context);
           }
         });
       }

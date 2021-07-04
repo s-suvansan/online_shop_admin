@@ -9,6 +9,8 @@ class AddProductViewModel extends BaseViewModel {
   ProductModel _productModel = ProductModel();
   bool _isLoading = false;
   AddProductArg _arg;
+  AddProductArg get arg => this._arg;
+
   //getter
   bool get isNegitible => _isNegotible;
   List<String> get images => _images;
@@ -45,22 +47,30 @@ class AddProductViewModel extends BaseViewModel {
 
   //remove image
   removeAlreadyAddedImageImage(BuildContext context, {int index}) async {
-    App.showCommonPopup(
-        context,
-        CommonPopup(
-          desc: "Do you want to delete this image?",
-        )).then((value) {
-      if (value) {
-        FirebaseStorage.instance.getReferenceFromUrl(_images[index]).then((ref) {
-          if (ref != null) {
-            FirebaseStorage.instance.ref().child(ref.path).delete().then((_) {
-              _images.removeAt(index);
-              notifyListeners();
-            });
-          }
-        });
-      }
-    });
+    if (_images.length > 1) {
+      App.showCommonPopup(
+          context,
+          CommonPopup(
+            desc: "Do you want to delete this image?",
+          )).then((value) {
+        if (value) {
+          showLoadingDialog(context);
+          FirebaseStorage.instance.getReferenceFromUrl(_images[index]).then((ref) {
+            if (ref != null) {
+              FirebaseStorage.instance.ref().child(ref.path).delete().then((_) {
+                FireStoreService.removeImageUrl(docId: _productModel.id, imageUrl: _images[index]).then((value) {
+                  _images.removeAt(index);
+                  notifyListeners();
+                  App.popOnce(context);
+                });
+              });
+            }
+          });
+        }
+      });
+    } else {
+      App.showInfoBar(context, msg: "புண்ட ஒரு image ஆவது கட்டயம் இருக்கோணும்.", bgColor: BrandColors.dangers);
+    }
   }
 
   void addProduct(BuildContext context) {
@@ -73,17 +83,19 @@ class AddProductViewModel extends BaseViewModel {
         _productModel.desc != "" &&
         _productModel?.price != null &&
         _productModel.price != "" &&
-        _productModel?.postBy != null &&
-        _productModel.postBy != "" &&
         _images != null &&
         _images.isNotEmpty) {
+      showLoadingDialog(context);
       _isLoading = true;
       notifyListeners();
-      FireStoreService.addProduct(_productModel).then((value) {
+      FireStoreService.addProduct(_productModel, isEdit: _arg.isEdit).then((value) {
         if (value) {
           _isLoading = false;
           notifyListeners();
-          Navigator.pop(context);
+          App.popOnce(context);
+          App.popOnce(context);
+        } else {
+          App.popOnce(context);
         }
       });
     } else {
