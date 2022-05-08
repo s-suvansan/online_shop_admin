@@ -41,7 +41,6 @@ class ChatViewModel extends BaseViewModel {
 
   // MessageModel.fromJson(val)
   bool _isTyping = false;
-  bool _isMessageSent = false;
   final _debouncer = Debouncer(milliseconds: 2000);
 
   void onMessageType(String msg) {
