@@ -72,13 +72,14 @@ class ProductInfoViewModel extends BaseViewModel {
 
   // for open image full view
   void openFullImageView(BuildContext context, {int index = 0}) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (ctx) => ImageViewer(
-          images: _product.imageUrl,
-          viewedIndex: index,
-        ),
-      ),
-    );
+    // Navigator.of(context).push(
+    //   MaterialPageRoute(
+    //     builder: (ctx) => ImageViewer(
+    //       images: _product.imageUrl,
+    //       viewedIndex: index,
+    //     ),
+    //   ),
+    // );
+    Navigator.pushNamed(context, ChatView.routeName);
   }
 }

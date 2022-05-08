@@ -18,4 +18,9 @@ class ScrollChange with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  //get phone status bar height
+  double _statusBarHeight = 40.0;
+  double get statusBarHeight => _statusBarHeight;
+  set setStatusBarHeight(double value) => _statusBarHeight = value;
 }

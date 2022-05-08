@@ -8,12 +8,11 @@ class AddProductView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<AddProductViewModel>.nonReactive(
         builder: (context, model, _) {
-          return SafeArea(
-              child: Scaffold(
+          return Scaffold(
             appBar: _AppBar(),
             body: _BodyPart(),
             bottomNavigationBar: _CommonButton(),
-          ));
+          );
         },
         onModelReady: (model) => model.onInit(context),
         viewModelBuilder: () => AddProductViewModel());

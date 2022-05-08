@@ -7,12 +7,11 @@ class ImageUploadView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ImageUploadViewModel>.nonReactive(
-      builder: (context, model, _) => SafeArea(
-          child: Scaffold(
+      builder: (context, model, _) => Scaffold(
         appBar: _AppBar(),
         body: _Body(),
         bottomNavigationBar: _CommonButton(),
-      )),
+      ),
       onModelReady: (model) => model.onInit(context),
       viewModelBuilder: () => ImageUploadViewModel(),
     );

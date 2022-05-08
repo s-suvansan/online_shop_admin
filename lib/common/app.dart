@@ -51,17 +51,20 @@ class App {
   }
 
   // svg image view
+  // svg image view
   static SvgPicture svgImage({
     @required String svg,
     Color color,
     double width = 50.0,
     double height = 50.0,
+    BoxFit fit,
   }) {
     return SvgPicture.asset(
       svg,
       color: color,
       width: width,
       height: height,
+      fit: fit ?? BoxFit.contain,
     );
   }
 
@@ -209,13 +212,14 @@ class App {
   }
 
   // show bottom sheet
-  static Future<bool> showBottomPopup(BuildContext context, Widget widget, {double reduceHeightBy = 0.0}) async {
+  static Future<bool> showBottomPopup(BuildContext context, Widget widget, {double reduceHeightBy}) async {
     bool _value = false;
     _value = await showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         builder: (BuildContext bc) {
-          return Container(height: getDeviceHight(context) - reduceHeightBy, child: widget);
+          return Container(
+              height: getDeviceHight(context) - (reduceHeightBy ?? getIt<ScrollChange>()?.statusBarHeight), child: widget);
         });
     return _value;
   }

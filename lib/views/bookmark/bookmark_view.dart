@@ -6,22 +6,35 @@ class BookmarkView extends StatelessWidget {
   static const routeName = "/bookmarkAsMain";
   @override
   Widget build(BuildContext context) {
+    getIt<ScrollChange>().setStatusBarHeight = MediaQuery.of(context).padding.top;
     return ViewModelBuilder<BookmarkViewModel>.nonReactive(
-      builder: (context, model, child) => SafeArea(
-        child: Scaffold(
-          backgroundColor: BrandColors.shadowLight,
-          appBar: _AppBar(),
-          body: _FavouriteList(),
-          floatingActionButton: FloatingActionButton.extended(
-            backgroundColor: BrandColors.brandColorDark,
-            onPressed: () => model.openAddProduct(context),
-            label: Row(
-              children: [
-                Icon(Icons.add, color: BrandColors.light),
-                BrandTexts.titleBold(text: "ADD", color: BrandColors.light),
-              ],
+      builder: (context, model, child) => Scaffold(
+        backgroundColor: BrandColors.shadowLight,
+        appBar: _AppBar(),
+        body: _FavouriteList(),
+        floatingActionButton: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FloatingActionButton(
+              heroTag: "message",
+              backgroundColor: BrandColors.brandColorDark,
+              child: Icon(Icons.message, color: BrandColors.light),
+              onPressed: () => model.openChatList(context),
             ),
-          ),
+            SizedBox(height: 12.0),
+            FloatingActionButton.extended(
+              heroTag: "addProduct",
+              backgroundColor: BrandColors.brandColorDark,
+              onPressed: () => model.openAddProduct(context),
+              label: Row(
+                children: [
+                  Icon(Icons.add, color: BrandColors.light),
+                  BrandTexts.titleBold(text: "ADD", color: BrandColors.light),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
       onModelReady: (model) => model.onInit(),

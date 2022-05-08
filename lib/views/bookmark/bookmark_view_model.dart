@@ -29,7 +29,7 @@ class BookmarkViewModel extends BaseViewModel {
   void openProductInfo(BuildContext context, Widget widget) {
     App.checkConnection(context).then((value) {
       if (value) {
-        App.showBottomPopup(context, widget, reduceHeightBy: 25.0);
+        App.showBottomPopup(context, widget);
       }
     });
   }
@@ -80,5 +80,9 @@ class BookmarkViewModel extends BaseViewModel {
       });
     }
     return _value;
+  }
+
+  void openChatList(BuildContext context) {
+    Navigator.pushNamed(context, ChatListView.routeName);
   }
 }

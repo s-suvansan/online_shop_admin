@@ -6,3 +6,5 @@ export 'package:online_shop_admin/views/widgets/index.dart';
 export 'package:online_shop_admin/views/product_info/index.dart';
 export 'package:online_shop_admin/views/splash/index.dart';
 export 'package:online_shop_admin/views/image_upload/index.dart';
+export 'package:online_shop_admin/views/chat/index.dart';
+export 'package:online_shop_admin/views/chat_list/index.dart';

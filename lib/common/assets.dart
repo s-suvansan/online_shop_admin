@@ -17,6 +17,7 @@ const EMPTY_MAN = 'assets/images/svgs/empty_man.svg';
 const ON = 'assets/images/svgs/on.svg';
 const OFF = 'assets/images/svgs/off.svg';
 const BROKEN_IMAGE = 'assets/images/svgs/broken_photo.svg';
+const CHAT_BG_2 = 'assets/images/svgs/chat_bg_2.svg';
 
 //place holder image
 const NO_IMAGE =

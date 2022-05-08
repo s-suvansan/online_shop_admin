@@ -1,6 +1,8 @@
 import 'main_index.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   setup();
   runApp(MyApp());
 }
@@ -18,6 +20,8 @@ class MyApp extends StatelessWidget {
         BookmarkView.routeName: (context) => BookmarkView(),
         AddProductView.routeName: (context) => AddProductView(),
         ImageUploadView.routeName: (context) => ImageUploadView(),
+        ChatView.routeName: (context) => ChatView(),
+        ChatListView.routeName: (context) => ChatListView(),
       },
       home: SplashView(),
     );
