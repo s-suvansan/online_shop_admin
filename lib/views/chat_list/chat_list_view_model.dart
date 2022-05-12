@@ -7,17 +7,17 @@ class ChatListViewModel extends BaseViewModel {
 
   // get chat list
   void getChatList(AsyncSnapshot<QuerySnapshot> snapshot) {
-    if (snapshot.hasData && snapshot.data.documents.length > 0) {
-      _chatList = snapshot.data.documents.map((doc) {
+    if (snapshot.hasData && snapshot.data.docs.length > 0) {
+      _chatList = snapshot.data.docs.map((doc) {
         List<MessageModel> _msgList = [];
-        doc.data.forEach((key, value) {
+        doc.data().forEach((key, value) {
           // MessageModel _msg = MessageModel.fromJson(value);
           _msgList.add(MessageModel.fromJson(value));
         });
         _msgList.sort((a, b) => b.dateTime.compareTo(a.dateTime));
         return ChatListModel(
-          userName: doc.documentID,
-          userId: doc.documentID,
+          userName: doc.id,
+          userId: doc.id,
           lastMessage: _msgList[0].message,
           lastMessageTime: _msgList[0].dateTime,
         );

@@ -47,30 +47,30 @@ class AddProductViewModel extends BaseViewModel {
 
   //remove image
   removeAlreadyAddedImageImage(BuildContext context, {int index}) async {
-    if (_images.length > 1) {
-      App.showCommonPopup(
-          context,
-          CommonPopup(
-            desc: "Do you want to delete this image?",
-          )).then((value) {
-        if (value) {
-          showLoadingDialog(context);
-          FirebaseStorage.instance.getReferenceFromUrl(_images[index]).then((ref) {
-            if (ref != null) {
-              FirebaseStorage.instance.ref().child(ref.path).delete().then((_) {
-                FireStoreService.removeImageUrl(docId: _productModel.id, imageUrl: _images[index]).then((value) {
-                  _images.removeAt(index);
-                  notifyListeners();
-                  App.popOnce(context);
-                });
-              });
-            }
+    // if (_images.length > 1) {
+    App.showCommonPopup(
+        context,
+        CommonPopup(
+          desc: "Do you want to delete this image?",
+        )).then((value) {
+      if (value) {
+        showLoadingDialog(context);
+
+        Reference ref = FirebaseStorage.instance.refFromURL(_images[index]);
+        if (ref != null) {
+          FirebaseStorage.instance.ref().child(ref.fullPath).delete().then((_) {
+            FireStoreService.removeImageUrl(docId: _productModel.id, imageUrl: _images[index]).then((value) {
+              _images.removeAt(index);
+              notifyListeners();
+              App.popOnce(context);
+            });
           });
         }
-      });
-    } else {
-      App.showInfoBar(context, msg: "புண்ட ஒரு image ஆவது கட்டயம் இருக்கோணும்.", bgColor: BrandColors.dangers);
-    }
+      }
+    });
+    // } else {
+    //   App.showInfoBar(context, msg: "புண்ட ஒரு image ஆவது கட்டயம் இருக்கோணும்.", bgColor: BrandColors.dangers);
+    // }
   }
 
   void addProduct(BuildContext context) {

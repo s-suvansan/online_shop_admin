@@ -19,8 +19,8 @@ class BookmarkViewModel extends BaseViewModel {
 
   // get product details
   void getProductDetails(AsyncSnapshot<QuerySnapshot> snapshot) {
-    if (snapshot.hasData && snapshot.data.documents.length >= 0) {
-      _product = List<ProductModel>.from(snapshot.data.documents.map((x) => ProductModel.fromJson(x.data)));
+    if (snapshot.hasData && snapshot.data.docs.length >= 0) {
+      _product = List<ProductModel>.from(snapshot.data.docs.map((x) => ProductModel.fromJson(x.data())));
     }
     _isLoading = false;
   }
@@ -52,7 +52,7 @@ class BookmarkViewModel extends BaseViewModel {
         showLoadingDialog(context);
         deleteImages(index).then((value) {
           try {
-            Firestore.instance.collection(Global.PRODUCTS).document("${_product[index].id}").delete();
+            FirebaseFirestore.instance.collection(Global.PRODUCTS).doc("${_product[index].id}").delete();
             App.popOnce(context);
           } catch (e) {
             App.popOnce(context);
@@ -66,10 +66,10 @@ class BookmarkViewModel extends BaseViewModel {
     bool _value = false;
     if (_product[index].imageUrl != null && _product[index].imageUrl.isNotEmpty) {
       _product[index].imageUrl.forEach((url) async {
-        StorageReference ref = await FirebaseStorage.instance.getReferenceFromUrl(url);
+        Reference ref = FirebaseStorage.instance.refFromURL(url);
         if (ref != null) {
           try {
-            await FirebaseStorage.instance.ref().child(ref.path).delete();
+            await FirebaseStorage.instance.ref().child(ref.fullPath).delete();
             _value = true;
           } catch (e) {
             _value = false;

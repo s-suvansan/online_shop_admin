@@ -190,7 +190,7 @@ class _MessageBox extends ViewModelWidget<ChatViewModel> {
             builder: (context, snapshot) {
               //isTyping
 
-              return (snapshot.hasData && snapshot?.data?.data != null && snapshot.data.data["isUserTyping"] == true)
+              return (snapshot.hasData && snapshot?.data?.data() != null && snapshot.data.data()["isUserTyping"] == true)
                   ? Padding(
                       padding: EdgeInsets.fromLTRB(20, 2, 2, 2),
                       child: BrandTexts.commonText(text: "typing...", fontSize: 11.0, maxLines: 8),

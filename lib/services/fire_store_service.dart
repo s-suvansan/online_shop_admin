@@ -3,23 +3,27 @@ import '../main_index.dart';
 class FireStoreService {
   // get product snapshot for stream build
   static Stream<QuerySnapshot> getProducts({int limit = 10}) {
-    return Firestore.instance.collection(Global.PRODUCTS).orderBy(Global.POST_AT, descending: true).limit(limit).snapshots();
+    return FirebaseFirestore.instance
+        .collection(Global.PRODUCTS)
+        .orderBy(Global.POST_AT, descending: true)
+        .limit(limit)
+        .snapshots();
   }
 
   // get language when change language
   static Future<LanguageModel> getLanguage({@required String docName}) async {
-    DocumentSnapshot doc = await Firestore.instance.collection(Global.LANGUAGE).document(docName).get();
-    if (doc != null && doc.data != null) {
-      return LanguageModel.fromJson(doc.data);
+    DocumentSnapshot doc = await FirebaseFirestore.instance.collection(Global.LANGUAGE).doc(docName).get();
+    if (doc != null && doc.data() != null) {
+      return LanguageModel.fromJson(doc.data());
     }
     return null;
   }
 
   //get phone numbers
   static Future<PhoneNumberModel> getPhoneNumbers() async {
-    DocumentSnapshot doc = await Firestore.instance.collection(Global.PHONE_NUMBER).document(Global.NUMBERS).get();
-    if (doc != null && doc.data != null) {
-      return PhoneNumberModel.fromJson(doc.data);
+    DocumentSnapshot doc = await FirebaseFirestore.instance.collection(Global.PHONE_NUMBER).doc(Global.NUMBERS).get();
+    if (doc != null && doc.data() != null) {
+      return PhoneNumberModel.fromJson(doc.data());
     }
     return null;
   }
@@ -28,7 +32,7 @@ class FireStoreService {
   static Future<bool> addProduct(ProductModel data, {bool isEdit = false}) async {
     // Call the user's CollectionReference to add a new user
     try {
-      await Firestore.instance.collection(Global.PRODUCTS).document(data.id).setData(data.toJson(isEdit: isEdit));
+      await FirebaseFirestore.instance.collection(Global.PRODUCTS).doc(data.id).set(data.toJson(isEdit: isEdit));
       return true;
     } catch (e) {
       return false;
@@ -39,7 +43,7 @@ class FireStoreService {
   static Future<bool> removeImageUrl({@required String docId, @required String imageUrl}) async {
     bool _value = true;
     try {
-      await Firestore.instance.collection(Global.PRODUCTS).document(docId).updateData(
+      await FirebaseFirestore.instance.collection(Global.PRODUCTS).doc(docId).update(
         {
           "${Global.IMAGE_URLS}": FieldValue.arrayRemove([imageUrl]),
         },
@@ -54,7 +58,7 @@ class FireStoreService {
   //save data
   static void addLangData() async {
     try {
-      await Firestore.instance.collection(Global.LANGUAGE).document(Global.OUR_TAMIL).setData(
+      await FirebaseFirestore.instance.collection(Global.LANGUAGE).doc(Global.OUR_TAMIL).set(
         {
           "home": "முன்பக்கம்",
           "favorites": "பிடிச்சது",

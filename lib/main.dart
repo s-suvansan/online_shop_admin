@@ -3,6 +3,7 @@ import 'main_index.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  Firebase.initializeApp();
   setup();
   runApp(MyApp());
 }

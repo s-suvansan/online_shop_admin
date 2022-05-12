@@ -59,10 +59,14 @@ class ImageUploadViewModel extends BaseViewModel {
   //upload file
   Future<String> uploadFile(File _image) async {
     String basename = p.basename(_image.path);
-    StorageReference storageReference = FirebaseStorage.instance.ref().child('images/$basename');
-    StorageUploadTask uploadTask = storageReference.putFile(_image);
-    await uploadTask.onComplete;
-    return await storageReference.getDownloadURL();
+    Reference storageReference = FirebaseStorage.instance.ref().child('images/$basename');
+    UploadTask uploadTask = storageReference.putFile(_image);
+    TaskSnapshot val = await uploadTask;
+    if (val != null) {
+      return await storageReference.getDownloadURL();
+    } else {
+      return null;
+    }
   }
 
   //remove image

@@ -4,9 +4,9 @@ class FireAuthService {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // create user anoymously for favorites
-  static Future<FirebaseUser> createUser() async {
-    FirebaseUser _user;
-    AuthResult value = await _auth.signInAnonymously();
+  static Future<User> createUser() async {
+    User _user;
+    UserCredential value = await _auth.signInAnonymously();
     if (value != null) {
       _user = value.user;
     }
@@ -14,8 +14,8 @@ class FireAuthService {
   }
 
   // check user login
-  static Future<UserLogin> checkUser() async {
-    FirebaseUser _user = await _auth.currentUser();
+  static UserLogin checkUser() {
+    User _user = _auth.currentUser;
     if (_user != null) {
       return UserLogin(isLogin: true, user: _user);
     } else {
@@ -26,7 +26,7 @@ class FireAuthService {
 
 class UserLogin {
   final bool isLogin;
-  final FirebaseUser user;
+  final User user;
 
   UserLogin({this.isLogin, this.user});
 }
