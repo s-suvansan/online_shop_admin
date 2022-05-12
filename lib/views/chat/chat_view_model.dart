@@ -66,12 +66,12 @@ class ChatViewModel extends BaseViewModel {
     if (_message != null && _message != "") {
       FireChatService.sentMessage(MessageModel(message: _message), userId: _userId).then((value) {
         if (value) {
+          _message = "";
+          _textEditingController.clear();
           if (_isTyping) {
             _isTyping = false;
             FireChatService.setIsTyping(_isTyping, userId: _userId);
           }
-          _message = "";
-          _textEditingController.clear();
         }
       });
     }
@@ -79,9 +79,24 @@ class ChatViewModel extends BaseViewModel {
 
   bool canShowDate(int index) {
     try {
-      var _nextIndex = (index + 1) < _messageList.length ? (index + 1) : _messageList.length - 1;
-      if (_messageList[index].dateTime.toDate().day != _messageList[_nextIndex].dateTime.toDate().day ||
+      var _nextIndex = (index + 1);
+      if ((_nextIndex < _messageList.length &&
+              _messageList[index].dateTime.toDate().day != _messageList[_nextIndex].dateTime.toDate().day) ||
           index == _messageList.length - 1) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  bool checkWhoSentNextMessage(int index, {bool bellowDateTile = false}) {
+    try {
+      var _nextIndex = (index + 1);
+      if (!bellowDateTile &&
+          _nextIndex < _messageList.length &&
+          _messageList[index].isCustomer == _messageList[_nextIndex].isCustomer) {
         return true;
       }
       return false;

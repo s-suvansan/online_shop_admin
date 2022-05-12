@@ -17,13 +17,13 @@ class ChatView extends StatelessWidget {
         body: Container(
           child: Stack(
             children: [
-              // App.svgImage(
-              //   svg: CHAT_BG_2,
-              //   height: _height,
-              //   // width: _width,
-              //   // color: Colors.blueGrey,
-              //   fit: BoxFit.cover,
-              // ),
+              App.svgImage(
+                svg: CHAT_BG,
+                height: _height,
+                // width: _width,
+                // color: Colors.blueGrey,
+                fit: BoxFit.cover,
+              ),
               Container(
                 padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: Column(
@@ -69,20 +69,22 @@ class _ChatList extends ViewModelWidget<ChatViewModel> {
         stream: FireChatService.getChats(userId: model.userId),
         builder: (context, snapshot) {
           model.getChatList(snapshot);
-          return ListView.separated(
-              reverse: true,
-              physics: BouncingScrollPhysics(),
-              padding: EdgeInsets.fromLTRB(8, 12, 8, 8),
-              itemBuilder: (context, index) {
-                return _ChatTile(
-                  key: UniqueKey(),
-                  width: width,
-                  message: model?.messageList[index],
-                  index: index,
-                );
-              },
-              separatorBuilder: (ctx, i) => SizedBox(height: 8.0),
-              itemCount: model?.messageList?.length ?? 0);
+          return (snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.done)
+              ? ListView.separated(
+                  reverse: true,
+                  physics: BouncingScrollPhysics(),
+                  padding: EdgeInsets.fromLTRB(8, 2, 8, 8),
+                  itemBuilder: (context, index) {
+                    return _ChatTile(
+                      key: UniqueKey(),
+                      width: width,
+                      message: model?.messageList[index],
+                      index: index,
+                    );
+                  },
+                  separatorBuilder: (ctx, i) => SizedBox(height: 2.0),
+                  itemCount: model?.messageList?.length ?? 0)
+              : SizedBox.shrink();
         });
   }
 }
@@ -94,11 +96,13 @@ class _ChatTile extends ViewModelWidget<ChatViewModel> {
   const _ChatTile({Key key, this.width, this.message, this.index}) : super(key: key, reactive: false);
   @override
   Widget build(BuildContext context, ChatViewModel model) {
+    bool _showDate = model.canShowDate(index);
+    bool _nextMsgFromSameOne = model.checkWhoSentNextMessage(index, bellowDateTile: _showDate);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: message.isCustomer ? CrossAxisAlignment.start : CrossAxisAlignment.end,
       children: [
-        if (model.canShowDate(index)) _ChatDateTile(message: message),
+        if (_showDate) _ChatDateTile(message: message),
         Row(
           mainAxisSize: MainAxisSize.min,
           // mainAxisAlignment: message.isCustomer ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -109,10 +113,18 @@ class _ChatTile extends ViewModelWidget<ChatViewModel> {
                 decoration: BoxDecoration(
                   color: message.isCustomer ? BrandColors.light : BrandColors.brandColor,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(message.isCustomer ? 0.0 : 12.0),
-                    topRight: Radius.circular(12.0),
+                    topLeft: Radius.circular(message.isCustomer
+                        ? _nextMsgFromSameOne
+                            ? 12.0
+                            : 0.0
+                        : 12.0),
+                    topRight: Radius.circular(message.isCustomer
+                        ? 12.0
+                        : _nextMsgFromSameOne
+                            ? 12.0
+                            : 0.0),
                     bottomLeft: Radius.circular(12.0),
-                    bottomRight: Radius.circular(message.isCustomer ? 12.0 : 0.0),
+                    bottomRight: Radius.circular(12.0),
                   ),
                 ),
                 padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
@@ -149,7 +161,7 @@ class _ChatDateTile extends ViewModelWidget<ChatViewModel> {
   @override
   Widget build(BuildContext context, ChatViewModel model) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 8.0),
+      padding: EdgeInsets.only(bottom: 6.0, top: 6.0),
       child: Row(
         // mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -164,7 +176,8 @@ class _ChatDateTile extends ViewModelWidget<ChatViewModel> {
               child: BrandTexts.caption(
                   text: "${App.showDateTimeInFormat(
                     message.dateTime,
-                    date: DateFormat.NormalDate,
+                    date: DateFormat.TextDateWithDays,
+                    needReverse: true,
                   )}",
                   fontSize: 12.0,
                   color: BrandColors.light.withOpacity(0.8),

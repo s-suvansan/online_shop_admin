@@ -121,7 +121,18 @@ class App {
               ? "${_makeTwoDigit(_postAt.day)}/${_makeTwoDigit(_postAt.month)}/${_postAt.year}"
               : "${_postAt.year}/${_makeTwoDigit(_postAt.month)}/${_makeTwoDigit(_postAt.day)}";
         } else if (date == DateFormat.TextDate) {
-          _value = "${_makeTwoDigit(_postAt.day, needSupText: true)} ${_getMonthText(_postAt.month)} ${_postAt.year}";
+          _value = !needReverse
+              ? "${_makeTwoDigit(_postAt.day, needSupText: true)} ${_getMonthText(_postAt.month)} ${_postAt.year}"
+              : "${_getMonthText(_postAt.month)} ${_postAt.day}, ${_postAt.year}";
+        } else if (date == DateFormat.TextDateWithDays) {
+          String _daysText = _checkDaysOfDate(_postAt);
+          if (_daysText != "") {
+            _value = _daysText;
+          } else {
+            _value = !needReverse
+                ? "${_makeTwoDigit(_postAt.day, needSupText: true)} ${_getMonthText(_postAt.month)} ${_postAt.year}"
+                : "${_getMonthText(_postAt.month)} ${_postAt.day}, ${_postAt.year}";
+          }
         }
       } else if (format == DateTimeFormat.Time) {
         if (time == TimeFormat.LocalTime) {
@@ -138,6 +149,22 @@ class App {
       _value = "";
     }
     return _value;
+  }
+
+  static String _checkDaysOfDate(DateTime date) {
+    String _val = "";
+    DateTime _now = DateTime.now();
+    DateTime _yester = DateTime.now().subtract(Duration(days: 1));
+    try {
+      if (date.day == _now.day && date.month == _now.month && date.year == _now.year) {
+        _val = "Today";
+      } else if (date.day == _yester.day && date.month == _yester.month && date.year == _yester.year) {
+        _val = "Yesterday";
+      }
+    } catch (e) {
+      _val = "";
+    }
+    return _val;
   }
 
   // make a digit digit as two digit text Ex:- 1 => 01
@@ -387,6 +414,7 @@ enum DateTimeFormat {
 enum DateFormat {
   NormalDate, // 23/10/2020
   TextDate, // 23th Oct 2020
+  TextDateWithDays, // Today, Yesterday, 23/10/2020 or 23th Oct 2020
 }
 
 enum TimeFormat {
