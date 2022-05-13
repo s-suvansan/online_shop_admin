@@ -83,37 +83,40 @@ class _FavouriteList extends ViewModelWidget<BookmarkViewModel> {
           stream: FireStoreService.getProducts(),
           builder: (context, snapshot) {
             model.getProductDetails(snapshot);
-            return !model.isLoading
-                ? model.product.isNotEmpty
-                    ? ListView.separated(
-                        physics: BouncingScrollPhysics(),
-                        itemCount: model.product.length,
-                        itemBuilder: (context, index) => GestureDetector(
-                          onTap: () => model.openProductInfo(
-                            context,
-                            ProductInfoView(
-                              productModel: model.product[index],
-                            ),
-                          ),
-                          child: _FavouriteListTile(
-                            key: UniqueKey(),
-                            index: index,
+            if (snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.done)
+              return model.product.isNotEmpty
+                  ? ListView.separated(
+                      physics: BouncingScrollPhysics(),
+                      itemCount: model.product.length,
+                      itemBuilder: (ctx, index) => GestureDetector(
+                        onTap: () => model.openProductInfo(
+                          context,
+                          ProductInfoView(
+                            productModel: model.product[index],
                           ),
                         ),
-                        separatorBuilder: (context, i) => SizedBox(height: 8.0),
-                      )
-                    : Empty(
-                        image: EMPTY_MAN,
-                        size: 150.0,
-                        moveFromTopBy: 0.0,
-                      )
-                : Center(
-                    child: Loading(
-                      needBg: true,
-                      size: 20.0,
-                      bgSize: 40.0,
-                    ),
-                  );
+                        child: _FavouriteListTile(
+                          key: UniqueKey(),
+                          index: index,
+                        ),
+                      ),
+                      separatorBuilder: (_, i) => SizedBox(height: 8.0),
+                    )
+                  : Empty(
+                      image: EMPTY_MAN,
+                      size: 150.0,
+                      moveFromTopBy: 0.0,
+                    );
+            else if (snapshot.connectionState == ConnectionState.waiting)
+              return Center(
+                child: Loading(
+                  needBg: true,
+                  size: 20.0,
+                  bgSize: 40.0,
+                ),
+              );
+            else
+              return SizedBox.shrink();
           }),
     );
   }

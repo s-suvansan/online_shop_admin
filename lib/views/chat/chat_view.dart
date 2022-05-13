@@ -1,3 +1,5 @@
+import 'package:flutter_slidable/flutter_slidable.dart';
+
 import '../../main_index.dart';
 
 class ChatView extends StatelessWidget {
@@ -103,52 +105,73 @@ class _ChatTile extends ViewModelWidget<ChatViewModel> {
       crossAxisAlignment: message.isCustomer ? CrossAxisAlignment.start : CrossAxisAlignment.end,
       children: [
         if (_showDate) _ChatDateTile(message: message),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          // mainAxisAlignment: message.isCustomer ? MainAxisAlignment.end : MainAxisAlignment.start,
-          children: [
-            Flexible(
-              child: Container(
-                constraints: BoxConstraints(maxWidth: width - 100.0),
-                decoration: BoxDecoration(
-                  color: message.isCustomer ? BrandColors.light : BrandColors.brandColor,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(message.isCustomer
-                        ? _nextMsgFromSameOne
+        Dismissible(
+          key: Key(index.toString()),
+          direction: DismissDirection.startToEnd,
+          dismissThresholds: {DismissDirection.startToEnd: 0.2},
+          background: Container(
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.only(left: 20.0),
+              child: Icon(
+                Icons.reply,
+                color: BrandColors.light,
+              )),
+          confirmDismiss: (val) {
+            print(val?.index);
+            // if(val.index != null)
+            return null;
+          },
+          child: Container(
+            width: width,
+            alignment: message.isCustomer ? Alignment.centerLeft : Alignment.centerRight,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              // mainAxisAlignment: message.isCustomer ? MainAxisAlignment.end : MainAxisAlignment.start,
+              children: [
+                Flexible(
+                  child: Container(
+                    constraints: BoxConstraints(maxWidth: width - 100.0),
+                    decoration: BoxDecoration(
+                      color: message.isCustomer ? BrandColors.light : BrandColors.brandColorLight,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(message.isCustomer
+                            ? _nextMsgFromSameOne
+                                ? 12.0
+                                : 0.0
+                            : 12.0),
+                        topRight: Radius.circular(message.isCustomer
                             ? 12.0
-                            : 0.0
-                        : 12.0),
-                    topRight: Radius.circular(message.isCustomer
-                        ? 12.0
-                        : _nextMsgFromSameOne
-                            ? 12.0
-                            : 0.0),
-                    bottomLeft: Radius.circular(12.0),
-                    bottomRight: Radius.circular(12.0),
-                  ),
-                ),
-                padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
-                // margin: EdgeInsets.fromLTRB(8, 0, 8, 0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
+                            : _nextMsgFromSameOne
+                                ? 12.0
+                                : 0.0),
+                        bottomLeft: Radius.circular(12.0),
+                        bottomRight: Radius.circular(12.0),
+                      ),
+                    ),
+                    padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
+                    // margin: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                    child: Column(
                       mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Flexible(child: BrandTexts.commonText(text: "${message.message}", fontSize: 14.0, maxLines: 20)),
-                        SizedBox(width: 8.0),
-                        BrandTexts.caption(
-                            text:
-                                "${App.showDateTimeInFormat(message.dateTime, format: DateTimeFormat.Time, time: TimeFormat.LocalTime)}",
-                            fontSize: 10.0)
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Flexible(child: BrandTexts.commonText(text: "${message.message}", fontSize: 14.0, maxLines: 20)),
+                            SizedBox(width: 8.0),
+                            BrandTexts.caption(
+                                text:
+                                    "${App.showDateTimeInFormat(message.dateTime, format: DateTimeFormat.Time, time: TimeFormat.LocalTime)}",
+                                fontSize: 10.0)
+                          ],
+                        ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ],
     );
